@@ -1,34 +1,36 @@
 import {
   View,
   Text,
-  ImageBackground,
   StyleSheet,
+  ImageBackground,
   TextInput,
   TouchableOpacity,
-} from "react-native";
-import { useForm, Controller } from "react-hook-form";
-import * as zod from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Redirect, Stack } from "expo-router";
-import { supabase } from "../lib/supabase";
-import { Toast } from "react-native-toast-notifications";
-import { useAuth } from "../providers/auth-provider";
+} from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import * as zod from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Redirect, Stack } from 'expo-router';
+import { supabase } from '../lib/supabase';
+import { Toast } from 'react-native-toast-notifications';
+import { useAuth } from '../providers/auth-provider';
 
 const authSchema = zod.object({
-  email: zod.string().email({ message: "Invalid email" }),
+  email: zod.string().email({ message: 'Invalid email address' }),
   password: zod
     .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
+    .min(6, { message: 'Password must be at least 6 characters long' }),
 });
 
 export default function Auth() {
   const { session } = useAuth();
-  if (session) return <Redirect href={"/"} />;
+
+  if (session) return <Redirect href='/' />;
+
   const { control, handleSubmit, formState } = useForm({
     resolver: zodResolver(authSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -38,75 +40,81 @@ export default function Auth() {
     if (error) {
       alert(error.message);
     } else {
-      Toast.show("Signed in successfully", {
-        type: "success",
-        placement: "top",
+      Toast.show('Signed in successfully', {
+        type: 'success',
+        placement: 'top',
         duration: 1500,
       });
     }
   };
+
   const signUp = async (data: zod.infer<typeof authSchema>) => {
     const { error } = await supabase.auth.signUp(data);
 
     if (error) {
       alert(error.message);
     } else {
-      Toast.show("Signed up successfully", {
-        type: "success",
-        placement: "top",
+      Toast.show('Signed up successfully', {
+        type: 'success',
+        placement: 'top',
         duration: 1500,
       });
     }
   };
+
   return (
     <ImageBackground
       source={{
-        uri: "https://images.pexels.com/photos/682933/pexels-photo-682933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        uri: 'https://images.pexels.com/photos/682933/pexels-photo-682933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
       }}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay} />
+
       <View style={styles.container}>
         <Text style={styles.title}>Welcome</Text>
         <Text style={styles.subtitle}>Please Authenticate to continue</Text>
+
         <Controller
           control={control}
-          name="email"
+          name='email'
           render={({
             field: { value, onChange, onBlur },
             fieldState: { error },
           }) => (
             <>
               <TextInput
-                placeholder="Email"
+                placeholder='Email'
                 style={styles.input}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                placeholderTextColor={"#aaa"}
-                autoCapitalize={"none"}
+                placeholderTextColor='#aaa'
+                autoCapitalize='none'
                 editable={!formState.isSubmitting}
               />
               {error && <Text style={styles.error}>{error.message}</Text>}
             </>
           )}
         />
+
         <Controller
           control={control}
-          name="password"
+          name='password'
           render={({
             field: { value, onChange, onBlur },
             fieldState: { error },
           }) => (
             <>
               <TextInput
-                placeholder="Password"
+                placeholder='Password'
                 style={styles.input}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 secureTextEntry
-                autoCapitalize={"none"}
+                placeholderTextColor='#aaa'
+                autoCapitalize='none'
                 editable={!formState.isSubmitting}
               />
               {error && <Text style={styles.error}>{error.message}</Text>}
@@ -136,67 +144,67 @@ export default function Auth() {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
-    alignItems: "center",
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.7)",
+    backgroundColor: 'rgba(0,0,0,0.7)',
   },
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 16,
-    width: "100%",
+    width: '100%',
   },
   title: {
     fontSize: 36,
-    fontWeight: "bold",
-    color: "#fff",
+    fontWeight: 'bold',
+    color: '#fff',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 18,
-    color: "#ddd",
+    color: '#ddd',
     marginBottom: 32,
   },
   input: {
-    width: "90%",
+    width: '90%',
     padding: 12,
     marginBottom: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 8,
     fontSize: 16,
-    color: "#000",
+    color: '#000',
   },
   button: {
-    backgroundColor: "#6a1b9a",
+    backgroundColor: '#6a1b9a',
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
-    width: "90%",
-    alignItems: "center",
+    width: '90%',
+    alignItems: 'center',
   },
   signUpButton: {
-    backgroundColor: "transparent",
-    borderColor: "#fff",
+    backgroundColor: 'transparent',
+    borderColor: '#fff',
     borderWidth: 1,
   },
   signUpButtonText: {
-    color: "#fff",
+    color: '#fff',
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#fff",
+    fontWeight: 'bold',
+    color: '#fff',
   },
   error: {
-    color: "red",
+    color: 'red',
     fontSize: 12,
     marginBottom: 16,
-    textAlign: "left",
-    width: "90%",
+    textAlign: 'left',
+    width: '90%',
   },
 });
