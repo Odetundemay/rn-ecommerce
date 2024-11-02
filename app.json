@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "hivesquare",
-    "slug": "hivesquare",
+    "name": "rn-ecommerce",
+    "scheme": "rn-ecommerce",
+    "slug": "rn-ecommerce",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,6 +23,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
